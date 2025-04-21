@@ -33,10 +33,26 @@ function App() {
       gridTemplateRows={"60px 1fr"}
       gridTemplateColumns={{ sm: `0 1fr`, md: `250px 1fr` }}
     >
-      <GridItem pl="2" bg="orange.300" area={"header"}>
+      <GridItem
+        boxShadow="lg"
+        zIndex="1"
+        pos="sticky"
+        top="0"
+        pt="7px"
+        bg="white"
+        area={"header"}
+      >
         <Header />
       </GridItem>
-      <GridItem p="5" area={"nav"} height="calc(100vh - 60px)">
+      <GridItem
+        pos="sticky"
+        top="60px"
+        left="0"
+        p="5"
+        area={"nav"}
+        height="calc(100vh - 60px)"
+        overflow="auto"
+      >
         <SideNav
           categories={data}
           loading={loading}

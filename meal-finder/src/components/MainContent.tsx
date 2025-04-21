@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  Divider,
   Heading,
   Image,
   SimpleGrid,
@@ -22,7 +21,7 @@ function MainContent({ meals, loading }: Props) {
     // Passing `columns={[2, null, 3]}` and `columns={{sm: 2, md: 3}}`
     // will have the same effect.
 
-    <SimpleGrid columns={[2, null, 3]} spacing="40px">
+    <SimpleGrid columns={[2, null, 3]} spacing="20px">
       {meals.map((m) => (
         <Card key={m.idMeal} boxShadow="lg">
           <CardBody>
