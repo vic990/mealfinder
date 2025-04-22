@@ -7,3 +7,7 @@ export type Meal = {
   strMealThumb: string;
   idMeal: number;
 };
+
+export type searchForm = {
+  search: string;
+};
