@@ -1,11 +1,6 @@
-import {
-  Heading,
-  Link,
-  SkeletonText,
-  textDecoration,
-  VStack,
-} from "@chakra-ui/react";
+import { Heading, Link, SkeletonText, VStack } from "@chakra-ui/react";
 import { Category } from "../types";
+// import Categories from "./Categories";
 
 type Props = {
   categories: Category[];
@@ -26,6 +21,8 @@ function SideNav({
   selectedCategory,
   setSelectedCategory,
 }: Props) {
+  console.log(categories);
+
   return loading ? (
     <SkeletonText mt="1" noOfLines={8} spacing="6" skeletonHeight="2" />
   ) : (

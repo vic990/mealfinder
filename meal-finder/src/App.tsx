@@ -3,41 +3,59 @@ import Header from "./components/Header";
 import SideNav from "./components/SideNav";
 import MainContent from "./components/MainContent";
 import { useState } from "react";
-import { Category, Meal, searchForm } from "./types";
+import { Category, Meal, MealDetails, searchForm } from "./types";
 import useHttpData from "./hooks/useHttpData";
 import axios from "axios";
 import RecipeModal from "./components/RecipeModal";
+import useFetch from "./hooks/useFetch";
+
+const baseUrl = "https://www.themealdb.com/api/json/v1/1/";
+
+const url = `${baseUrl}list.php?c=list`;
+
+const makeMealUrl = (category: Category) =>
+  `${baseUrl}filter.php?c=${category.strCategory}`;
+
+const defaultCategory = {
+  strCategory: "Beef",
+};
 
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const url = "https://www.themealdb.com/api/json/v1/1/list.php?c=list";
-
-  const makeMealUrl = (category: Category) =>
-    `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category.strCategory}`;
-
-  const defaultCategory = {
-    strCategory: "Beef",
-  };
-
   const [selectedCategory, setSelectedCategory] =
     useState<Category>(defaultCategory);
+
   const { loading, data } = useHttpData<Category>(url);
+
   const {
     loading: loadingMeal,
     data: dataMeal,
     setData: setMeals,
     setLoading: setLoadingMeal,
-  } = useHttpData<Meal>(makeMealUrl(defaultCategory));
+  } = useHttpData<Meal>(makeMealUrl(selectedCategory));
 
   const searchApi = (searchForm: searchForm) => {
-    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchForm.search}`;
+    const url = `${baseUrl}search.php?s=${searchForm.search}`;
     setLoadingMeal(true);
     axios
       .get<{ meals: Meal[] }>(url)
       .then(({ data }) => setMeals(data.meals))
       .finally(() => setLoadingMeal(false));
   };
+
+  const {
+    fetch,
+    loading: loadingMealsDetails,
+    data: mealDetailData,
+  } = useFetch<MealDetails>();
+
+  const searchMealsDetails = (meal: Meal) => {
+    onOpen();
+    fetch(`${baseUrl}lookup.php?i=${meal.idMeal}`);
+  };
+
+  console.log(selectedCategory);
 
   return (
     <>
@@ -77,14 +95,19 @@ function App() {
         </GridItem>
         <GridItem p="4" bg="gray.100" area={"main"}>
           <MainContent
-            openRecipe={onOpen}
+            openRecipe={searchMealsDetails}
             loading={loadingMeal}
             meals={dataMeal}
           />
         </GridItem>
       </Grid>
 
-      <RecipeModal isOpen={isOpen} onClose={onClose} />
+      <RecipeModal
+        data={mealDetailData}
+        loading={loadingMealsDetails}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </>
   );
 }
